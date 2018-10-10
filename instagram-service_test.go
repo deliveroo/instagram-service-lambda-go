@@ -2,11 +2,13 @@ package main
 
 import (
     "testing"
+    "net/http"
+    "fmt"
 )
 
 func TestHandler(t *testing.T) {
-    var result, _ = getInstagramHandleForID("14950")
-    if 1100 != 10 {
-       t.Errorf(result)
-    }
+    req, _ := http.NewRequest("GET", "http://example.com", nil)
+    var string, error = HandleRequest(*req)
+    fmt.Println(string, error)
+    //t.Errorf(result)
 }
