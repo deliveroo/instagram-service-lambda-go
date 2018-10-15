@@ -8,13 +8,31 @@ import (
     "net/http"
 )
 
-// type Instagram struct {
-//   Name string
-// }
+type InvalidRequestError struct {
+    Type string
+    HttpStatus int
+    What string
+}
 
-// type MyEvent struct {
-//         Name string `json:"name"`
-// }
+func (e InvalidRequestError) Error() string {
+    return fmt.Sprintf("%v: %v: %v", e.Type, e.HttpStatus, e.What)
+}
+
+func idNotFoundError(id string) error {
+    return InvalidRequestError {
+        "Not Found",
+        404,
+        fmt.Sprintf("Instagram details are not found for %v", id),
+    }
+}
+
+func invalidRequestError(request http.Request) error {
+    return InvalidRequestError {
+        "Bad Request",
+        400,
+        fmt.Sprintf("Request url invalid: %v", request.URL.String()),
+    }
+}
 
 var instagramHandlesById map[string]string
 
@@ -31,13 +49,16 @@ func main() {
 }
 
 func HandleRequest(request http.Request) (string, error) {
-    for key, value := range instagramHandlesById {
-        fmt.Println(key, value)
-    }
-    return instagramHandlesById["14950"], nil
-}
 
-func getInstagramHandleForID(id string) (string, bool) {
-    var thing, thing2 = instagramHandlesById[id]
-    return thing, thing2
+    restaurantID := request.URL.Query().Get("restaurantID")
+    if restaurantID == "" {
+        return "", invalidRequestError(request)
+    }
+
+    instagramHandle := instagramHandlesById[restaurantID]
+    if instagramHandle == "" {
+        return "", idNotFoundError(restaurantID)
+    }
+
+    return instagramHandle, nil
 }
