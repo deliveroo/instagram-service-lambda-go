@@ -11,11 +11,11 @@ upload_roo_lambda: &upload_roo_lambda
 
   steps:
     - attach_workspace:
-        at: workspace
+        at: /tmp/workspace
 
-    - setup_remote_docker:
-        reusable: true
-        version: 17.05.0-ce
+    - run:
+        name: Create deploy package
+        run: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go
 
     - run:
         name: Push new Lambda version
@@ -31,34 +31,26 @@ jobs:
     <<: *defaults
 
     steps:
-      - setup_remote_docker:
-          reusable: true
-          version: 17.05.0-ce
-
       - checkout
 
       - run:
-          name: Prepare testing image
-          command: docker build -t instagram-service-lambda-go .
-
-      - run:
-          name: Download modules
-          command: docker run --rm instagram-service-lambda-go sh -c 'go mod download'
+           name: Ensure modules are available
+          command: go mod download
 
       - run:
           name: Test the Lambda function
-          command: docker run --rm instagram-service-lambda-go sh -c 'cd .. && go test -v ./...'
+          command: env GOOS=linux GOARCH=amd64 go test -v ./...
       - run:
-          name: Save zipped binary to the workspace
-          command: |
-            set -ex
-            mkdir -p workspace
-            ARTEFACT=workspace/instagram-service-lambda-go-${CIRCLE_SHA1}.zip
-            docker run --rm instagram-service-lambda-go ./export > ${ARTEFACT}
-      - persist_to_workspace:
-          root: workspace
+          name: Build the app
+          command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service-lambda-go.go
+      - save_cache:
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-            - '*.zip'
+          - "/go/pkg/mod"
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - instagram-service-lambda-go
 
   upload_sandbox:
     <<: *upload_roo_lambda
