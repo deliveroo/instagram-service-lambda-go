@@ -37,7 +37,7 @@ func invalidRequestError(request http.Request) error {
 var instagramHandlesById map[string]string
 
 func init() {
-    var jsonFile, jsonfileError = ioutil.ReadFile("./data.json")
+    var jsonFile, jsonfileError = ioutil.ReadFile("../data.json")
         if jsonfileError != nil {
         fmt.Printf("File error: %v\n", jsonfileError)
     }
