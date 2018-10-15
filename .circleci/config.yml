@@ -22,7 +22,7 @@ upload_roo_lambda: &upload_roo_lambda
         command: |
           `print_env ${TARGET}`
           set -ex
-          SOURCE=workspace/instagram-service-lambda-go-${CIRCLE_SHA1}.zip
+          SOURCE=tmp/instagram-service-lambda-go.zip
           DESTINATION=${AWS_S3_PREFIX}/instagram-service-lambda-go/${CIRCLE_SHA1}.zip
           aws s3 cp $SOURCE $DESTINATION
 
@@ -75,7 +75,7 @@ workflows:
   test_and_upload:
     jobs:
       - test
-      - upload_staging: &upload_from_master
+      - upload_staging: &upload_roo_lambda
           requires:
             - test
           filters:
@@ -83,6 +83,6 @@ workflows:
               only:
                 - master
       - upload_production:
-          <<: *upload_from_master
+          <<: *upload_roo_lambda
       - upload_sandbox:
-          <<: *upload_from_master
+          <<: *upload_roo_lambda
