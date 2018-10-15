@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: circleci/golang:1.11
+    - image: deliveroo/circleci:0.2.3
       environment:
         GO111MODULE: "ON"
 
@@ -15,7 +15,7 @@ upload_roo_lambda: &upload_roo_lambda
 
     - setup_remote_docker:
         reusable: true
-        version: 18.06.1-ce
+        version: 17.05.0-ce
 
     - run:
         name: Push new Lambda version
@@ -33,7 +33,7 @@ jobs:
     steps:
       - setup_remote_docker:
           reusable: true
-          version: 18.06.1-ce
+          version: 17.05.0-ce
 
       - checkout
 
