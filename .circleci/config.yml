@@ -45,7 +45,7 @@ jobs:
           command: ls
       - run:
           name: Build the app
-          command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service-lambda-go.go
+          command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service.go
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
