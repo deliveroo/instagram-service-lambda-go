@@ -38,11 +38,12 @@ jobs:
       - checkout
 
       - run:
-          name: Ensure modules are available
-          command: go mod download
-      - run:
           name: Prepare testing image
           command: docker build -t instagram-service-lambda-go .
+
+      - run:
+        name: Download modules
+        command: docker run -rm instagram-service-lambda-go sh -c 'go mod download'
 
       - run:
           name: Test the Lambda function
