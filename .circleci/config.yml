@@ -54,7 +54,7 @@ jobs:
             set -ex
             mkdir -p workspace
             ARTEFACT=workspace/instagram-service-lambda-go-${CIRCLE_SHA1}.zip
-            docker run --rm instagram-service-lambda-go export > ${ARTEFACT}
+            docker run --rm instagram-service-lambda-go ./export > ${ARTEFACT}
       - persist_to_workspace:
           root: workspace
           paths:
