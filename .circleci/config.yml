@@ -1,0 +1,93 @@
+defaults: &defaults
+  docker:
+    - image: deliveroo/circleci:0.2.3
+
+version: 2
+
+upload_roo_lambda: &upload_roo_lambda
+  <<: *defaults
+
+  steps:
+    - attach_workspace:
+        at: workspace
+
+    - setup_remote_docker:
+        reusable: true
+        version: 17.05.0-ce
+
+    - run:
+        name: Push new Lambda version
+        command: |
+          `print_env ${TARGET}`
+          set -ex
+          SOURCE=workspace/instagram-service-lambda-go-${CIRCLE_SHA1}.zip
+          DESTINATION=${AWS_S3_PREFIX}/instagram-service-lambda-go/${CIRCLE_SHA1}.zip
+          aws s3 cp $SOURCE $DESTINATION
+
+jobs:
+  test:
+    <<: *defaults
+
+    steps:
+      - setup_remote_docker:
+          reusable: true
+          version: 17.05.0-ce
+
+      - checkout
+
+      - run:
+          name: Prepare testing image
+          command: docker build -t instagram-service-lambda-go .
+
+      - run:
+          name: Test the Lambda function
+          command: docker run --rm instagram-service-lambda-go sh -c 'go test -v'
+
+      - run:
+          name: Save zipped binary to the workspace
+          command: |
+            set -ex
+            mkdir -p workspace
+            ARTEFACT=workspace/instagram-service-lambda-go-${CIRCLE_SHA1}.zip
+            docker run --rm instagram-service-lambda-go ./export > ${ARTEFACT}
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - '*.zip'
+
+  upload_sandbox:
+    <<: *upload_roo_lambda
+    environment:
+      - TARGET: sandbox
+
+  upload_staging:
+    <<: *upload_roo_lambda
+    environment:
+      - TARGET: staging
+
+  upload_production:
+    <<: *upload_roo_lambda
+    environment:
+      - TARGET: production
+
+workflows:
+  version: 2
+  test_and_upload:
+    jobs:
+      - test
+      - upload_sandbox:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - sandbox
+      - upload_staging: &upload_from_master
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - upload_production:
+          <<: *upload_from_master
