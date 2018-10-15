@@ -15,7 +15,7 @@ upload_roo_lambda: &upload_roo_lambda
 
     - run:
         name: Create deploy package
-        run: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go
+        command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go
 
     - run:
         name: Push new Lambda version
