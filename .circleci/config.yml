@@ -1,6 +1,8 @@
 defaults: &defaults
   docker:
     - image: deliveroo/circleci:0.2.3
+      environment:
+        GO111MODULE: "ON"
 
 version: 2
 
