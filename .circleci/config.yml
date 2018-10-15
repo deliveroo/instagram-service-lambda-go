@@ -34,7 +34,7 @@ jobs:
       - checkout
 
       - run:
-           name: Ensure modules are available
+          name: Ensure modules are available
           command: go mod download
 
       - run:
