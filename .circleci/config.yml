@@ -50,7 +50,7 @@ jobs:
           command: docker run --rm instagram-service-lambda-go sh -c 'cd .. && go test -v ./...'
       - run:
           name: Debug
-          command: docker run --rm instagram-service-lambda-go sh -c 'ls.'
+          command: docker run --rm instagram-service-lambda-go sh -c 'ls'
       - run:
           name: Save zipped binary to the workspace
           command: |
