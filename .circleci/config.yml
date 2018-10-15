@@ -41,6 +41,9 @@ jobs:
           name: Test the Lambda function
           command: env GOOS=linux GOARCH=amd64 go test -v ./...
       - run:
+          name: Debug
+          command: ls
+      - run:
           name: Build the app
           command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service-lambda-go.go
       - save_cache:
