@@ -75,13 +75,6 @@ workflows:
   test_and_upload:
     jobs:
       - test
-      - upload_sandbox:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - sandbox
       - upload_staging: &upload_from_master
           requires:
             - test
@@ -90,4 +83,6 @@ workflows:
               only:
                 - master
       - upload_production:
+          <<: *upload_from_master
+      - upload_sandbox:
           <<: *upload_from_master
