@@ -43,7 +43,7 @@ jobs:
 
       - run:
           name: Test the Lambda function
-          command: docker run --rm instagram-service-lambda-go sh -c 'go test -v'
+          command: docker run --rm instagram-service-lambda-go sh -c 'go test -v ./..'
 
       - run:
           name: Save zipped binary to the workspace
