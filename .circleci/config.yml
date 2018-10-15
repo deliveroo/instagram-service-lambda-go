@@ -42,8 +42,8 @@ jobs:
           command: docker build -t instagram-service-lambda-go .
 
       - run:
-        name: Download modules
-        command: docker run -rm instagram-service-lambda-go sh -c 'go mod download'
+          name: Download modules
+          command: docker run -rm instagram-service-lambda-go sh -c 'go mod download'
 
       - run:
           name: Test the Lambda function
