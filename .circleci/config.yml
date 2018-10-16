@@ -9,9 +9,6 @@ version: 2
 upload_roo_lambda: &upload_roo_lambda
   <<: *defaults
 
-  machine:
-    enabled: true
-
   steps:
 
     - attach_workspace:
@@ -24,7 +21,7 @@ upload_roo_lambda: &upload_roo_lambda
     - run:
         name: Push new Lambda version
         command: |
-          `print_env ${TARGET}`
+          `~/workspace/print_env ${TARGET}`
           set -ex
           SOURCE=tmp/instagram-service-lambda-go.zip
           DESTINATION=${AWS_S3_PREFIX}/instagram-service-lambda-go/${CIRCLE_SHA1}.zip
