@@ -21,6 +21,7 @@ upload_roo_lambda: &upload_roo_lambda
     - run:
         name: Push new Lambda version
         command: |
+          find ..
           `print_env ${TARGET}`
           set -ex
           SOURCE=tmp/instagram-service-lambda-go.zip
