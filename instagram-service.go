@@ -1,6 +1,7 @@
 package main
 
 import (
+    "context"
     "fmt"
     "encoding/json"
     "io/ioutil"
@@ -48,11 +49,10 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(request http.Request) (string, error) {
+func HandleRequest(ctx context.Context) (string, error) {
 
-    fmt.Println(request.URL)
-    fmt.Println(request)
-    restaurantID := request.URL.Query().Get("restaurantID")
+    fmt.Println(ctx)
+    /*restaurantID := request.URL.Query().Get("restaurantID")
 
     if restaurantID == "" {
         return "", invalidRequestError(request)
@@ -61,7 +61,7 @@ func HandleRequest(request http.Request) (string, error) {
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
         return "", idNotFoundError(restaurantID)
-    }
+    }*/
 
-    return instagramHandle, nil
+    return "", nil
 }
