@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Build the app
           command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service.go
-      - copy:
+      - run:
           name: Copy required json filters
           command: cp data.json /tmp/data.json
       - save_cache:
