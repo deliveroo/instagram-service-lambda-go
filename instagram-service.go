@@ -1,11 +1,11 @@
 package main
 
 import (
-    "context"
     "fmt"
     "encoding/json"
     "io/ioutil"
     "github.com/aws/aws-lambda-go/lambda"
+    "github.com/aws/aws-lambda-go/events"
     "net/http"
 )
 
