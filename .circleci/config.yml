@@ -11,8 +11,7 @@ upload_roo_lambda: &upload_roo_lambda
 
     - run:
           name: Debug 3
-          command: ls /tmp/workspace/instagram-service-lambda-go
-    - run:
+          command: ls /tmp/workspace
         name: Create deploy package
         command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go /tmp/workspace/data.json
 
@@ -47,7 +46,7 @@ jobs:
           command: ls
       - run:
           name: Build the app
-          command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service.go
+          command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go instagram-service.go
       - run:
           name: Copy required json filters
           command: cp data.json /tmp/data.json
