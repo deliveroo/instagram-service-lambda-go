@@ -55,13 +55,15 @@ func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
     restaurantID := request.QueryStringParameters["restaurantid"]
 
     if restaurantID == "" {
+        fmt.Println("NO restaurantid QUERY PARAM")
         //return "", invalidRequestError(request)
     }
 
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
+        fmt.Println("NO INSTAGRAM HANDLE")
         //return "", idNotFoundError(restaurantID)
     }
 
-    return "", nil
+    return instagramHandle, nil
 }
