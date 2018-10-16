@@ -10,8 +10,11 @@ upload_roo_lambda: &upload_roo_lambda
   <<: *defaults
 
   steps:
+    machine:
+      enabled: true
+
     - attach_workspace:
-        at: workspace
+        at: /tmp/workspace
 
     - run:
         name: Create deploy package
