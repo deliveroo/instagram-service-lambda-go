@@ -67,5 +67,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
         //return "", idNotFoundError(restaurantID)
     }
 
+    fmt.Println(instagramHandle)
+
     return instagramHandle, nil
 }
