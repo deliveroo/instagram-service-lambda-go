@@ -11,7 +11,7 @@ upload_roo_lambda: &upload_roo_lambda
 
     - run:
           name: Debug 3
-          command: ls /tmp/workspace/
+          command: ls /tmp/workspace/instagram-service-lambda-go
     - run:
         name: Create deploy package
         command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go
