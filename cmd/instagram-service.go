@@ -50,7 +50,10 @@ func main() {
 
 func HandleRequest(request http.Request) (string, error) {
 
+    fmt.Println(request.URL)
+    fmt.Println(request)
     restaurantID := request.URL.Query().Get("restaurantID")
+
     if restaurantID == "" {
         return "", invalidRequestError(request)
     }
