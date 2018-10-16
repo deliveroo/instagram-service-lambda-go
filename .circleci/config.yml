@@ -49,6 +49,9 @@ jobs:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
           - "/go/pkg/mod"
+      - run:
+          name: Debug 2
+          command: ls
       - persist_to_workspace:
           root: /tmp
           paths:
