@@ -49,9 +49,9 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(ctx context.Context) (string, error) {
+func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
 
-    fmt.Println(ctx)
+    fmt.Println(request)
     /*restaurantID := request.URL.Query().Get("restaurantID")
 
     if restaurantID == "" {
