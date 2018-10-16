@@ -5,7 +5,6 @@ import (
     "encoding/json"
     "io/ioutil"
     "github.com/aws/aws-lambda-go/lambda"
-    "github.com/aws/aws-lambda-go/events"
     "net/http"
 )
 
@@ -49,7 +48,7 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
+func HandleRequest(request string) (string, error) {
 
     fmt.Println(request)
     /*restaurantID := request.URL.Query().Get("restaurantID")
