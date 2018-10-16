@@ -9,9 +9,10 @@ version: 2
 upload_roo_lambda: &upload_roo_lambda
   <<: *defaults
 
+  machine:
+    enabled: true
+
   steps:
-    machine:
-      enabled: true
 
     - attach_workspace:
         at: /tmp/workspace
