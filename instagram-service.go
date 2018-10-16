@@ -52,16 +52,16 @@ func main() {
 func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
 
     fmt.Println(request)
-    /*restaurantID := request.URL.Query().Get("restaurantID")
+    restaurantID := request.QueryStringParameters["restaurantid"]
 
     if restaurantID == "" {
-        return "", invalidRequestError(request)
+        //return "", invalidRequestError(request)
     }
 
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
-        return "", idNotFoundError(restaurantID)
-    }*/
+        //return "", idNotFoundError(restaurantID)
+    }
 
     return "", nil
 }
