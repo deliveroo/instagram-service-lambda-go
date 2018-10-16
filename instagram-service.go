@@ -54,7 +54,7 @@ func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
     fmt.Println(request)
     restaurantID := request.QueryStringParameters["restaurantid"]
 
-    fmt.Println(request.QueryStringParameter)
+    fmt.Println(request.QueryStringParameters)
 
     if restaurantID == "" {
         fmt.Println("NO restaurantid QUERY PARAM")
