@@ -14,7 +14,7 @@ upload_roo_lambda: &upload_roo_lambda
           command: ls /tmp/workspace/instagram-service-lambda-go
     - run:
         name: Create deploy package
-        command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go
+        command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go /tmp/workspace/data.json
 
     - run:
         name: Push new Lambda version
@@ -48,6 +48,9 @@ jobs:
       - run:
           name: Build the app
           command: env GOOS=linux GOARCH=amd64 go build -o /tmp/instagram-service-lambda-go cmd/instagram-service.go
+      - copy:
+          name: Copy required json filters
+          command: cp data.json /tmp/data.json
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
@@ -59,6 +62,7 @@ jobs:
           root: /tmp
           paths:
             - instagram-service-lambda-go
+            - data.json
 
   upload_sandbox:
     <<: *upload_roo_lambda
