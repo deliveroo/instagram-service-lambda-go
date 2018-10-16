@@ -49,7 +49,7 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
+func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
     fmt.Println(request)
     restaurantID := request.QueryStringParameters["restaurantid"]
@@ -69,5 +69,5 @@ func HandleRequest(request events.APIGatewayProxyRequest) (string, error) {
 
     fmt.Println(instagramHandle)
 
-    return instagramHandle, nil
+    return events.APIGatewayProxyResponse{Body: instagramHandle, StatusCode: 200}, nil
 }
