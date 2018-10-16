@@ -1,13 +1,8 @@
-defaults: &defaults
-  docker:
-    - image: deliveroo/circleci:0.2.3
-      environment:
-        GO111MODULE: "on"
-
 version: 2
 
 upload_roo_lambda: &upload_roo_lambda
-  <<: *defaults
+  docker:
+    - image: deliveroo/circleci:0.2.3
 
   steps:
 
@@ -30,7 +25,10 @@ upload_roo_lambda: &upload_roo_lambda
 
 jobs:
   test:
-    <<: *defaults
+    docker:
+    - image: circleci/golang:1.11
+      environment:
+        GO111MODULE: "on"
 
     steps:
       - checkout
