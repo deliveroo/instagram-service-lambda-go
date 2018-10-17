@@ -6,33 +6,16 @@ import (
     "io/ioutil"
     "github.com/aws/aws-lambda-go/lambda"
     "github.com/aws/aws-lambda-go/events"
-    "net/http"
 )
 
-type InvalidRequestError struct {
-    Type string
-    HttpStatus int
-    What string
+func idNotFoundErrorResponse(id string) events.APIGatewayProxyResponse {
+    body:= fmt.Sprintf("{\"error\":\"Instagram details are not found for %v\"}", id)
+    return events.APIGatewayProxyResponse{Body: body, StatusCode: 404}
 }
 
-func (e InvalidRequestError) Error() string {
-    return fmt.Sprintf("%v: %v: %v", e.Type, e.HttpStatus, e.What)
-}
-
-func idNotFoundError(id string) error {
-    return InvalidRequestError {
-        "Not Found",
-        404,
-        fmt.Sprintf("Instagram details are not found for %v", id),
-    }
-}
-
-func invalidRequestError(request http.Request) error {
-    return InvalidRequestError {
-        "Bad Request",
-        400,
-        fmt.Sprintf("Request url invalid: %v", request.URL.String()),
-    }
+func invalidRequestErrorResponse() events.APIGatewayProxyResponse {
+    body:= fmt.Sprintf("{\"error\":\"Request url invalid\"}")
+    return events.APIGatewayProxyResponse{Body: body, StatusCode: 400}
 }
 
 var instagramHandlesById map[string]string
@@ -49,26 +32,24 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func HandleRequest(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse {
 
     fmt.Println(request)
     restaurantID := request.QueryStringParameters["restaurantid"]
     fmt.Println(request.QueryStringParameters)
 
     if restaurantID == "" {
-        // TODO:
-        //return "", invalidRequestError(request)
+        return invalidRequestErrorResponse()
     }
 
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
-        // TODO:
-        //return "", idNotFoundError(restaurantID)
+        return idNotFoundErrorResponse(restaurantID)
     }
 
     fmt.Println(restaurantID)
     fmt.Println(instagramHandle)
 
     body := fmt.Sprintf("{\"handle\":\"%s\"}", instagramHandle)
-    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}, nil
+    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}
 }
