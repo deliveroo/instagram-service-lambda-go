@@ -19,7 +19,7 @@ func invalidRequestErrorResponse() events.APIGatewayProxyResponse {
 }
 
 var responseHeaders = map[string]string {
-    "cache-control": "public, max-age:86400",
+    "cache-control": "public, max-age:5400",
 }
 
 var instagramHandlesById map[string]string
