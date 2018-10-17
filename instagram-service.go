@@ -18,6 +18,10 @@ func invalidRequestErrorResponse() events.APIGatewayProxyResponse {
     return events.APIGatewayProxyResponse{Body: body, StatusCode: 400}
 }
 
+var responseHeaders = map[string]string {
+    "cache-control": "public, max-age:86400",
+}
+
 var instagramHandlesById map[string]string
 
 func init() {
@@ -51,5 +55,5 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
     fmt.Println(instagramHandle)
 
     body := fmt.Sprintf("{\"handle\":\"%s\"}", instagramHandle)
-    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}, nil
+    return events.APIGatewayProxyResponse{Headers: responseHeaders, Body: body, StatusCode: 200}, nil
 }
