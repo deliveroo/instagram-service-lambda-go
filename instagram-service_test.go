@@ -7,7 +7,7 @@ import (
 
 func TestFound(t *testing.T) {
     //When the restaurant exists
-    expected := events.APIGatewayProxyResponse{Body: "{\"handle\":\"nandosuk\"}", StatusCode: 200}  
+    expected := events.APIGatewayProxyResponse{Body: "{\"url\":\"https://www.instagram.com/nandosuk/\"}", StatusCode: 200}  
     var query = map[string]string{ "restaurantid": "14950", }
     req := events.APIGatewayProxyRequest{QueryStringParameters: query}
     var actual, _ = HandleRequest(req)
