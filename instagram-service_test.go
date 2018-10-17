@@ -1,21 +1,23 @@
 package main
 
-// import (
-//     "testing"
-//     "net/http"
-// )
+import (
+    "testing"
+    "github.com/aws/aws-lambda-go/events"
+)
 
-// func TestFound(t *testing.T) {
-//     //When the restaurant exists
-//     Expected := "nandosuk"
-//     req, _ := http.NewRequest("GET", "http://example.com/?restaurantID=14950", nil)
-//     var actual, err = HandleRequest(*req)
-//     if err != nil {
-//         t.Errorf("Error: %v", err)
-//     } else if actual != Expected {
-//         t.Errorf("Error actual: '%v', and Expected: '%v'.", actual, Expected)
-//     }
-// }
+func TestFound(t *testing.T) {
+    //When the restaurant exists
+    expected := events.APIGatewayProxyResponse{Body: "{\"handle\":\"nandosuk\"}", StatusCode: 200}  
+    var query = map[string]string{ "restaurantid": "14950", }
+    req := events.APIGatewayProxyRequest{QueryStringParameters: query}
+    var actual, err = HandleRequest(req)
+    if actual.Body != expected.Body {
+        t.Errorf("Error actual: '%v', and Expected: '%v'.", actual, expected)
+    }
+    if err != nil {
+        t.Errorf("Error: %v", err)
+    }
+}
 
 // func TestNotFound(t *testing.T) {
 //     //When the restaurant ID doesn't exist

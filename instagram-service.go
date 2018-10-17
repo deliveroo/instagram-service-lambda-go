@@ -53,21 +53,22 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 
     fmt.Println(request)
     restaurantID := request.QueryStringParameters["restaurantid"]
-
     fmt.Println(request.QueryStringParameters)
 
     if restaurantID == "" {
-        fmt.Println("NO restaurantid QUERY PARAM")
+        // TODO:
         //return "", invalidRequestError(request)
     }
 
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
-        fmt.Println("NO INSTAGRAM HANDLE")
+        // TODO:
         //return "", idNotFoundError(restaurantID)
     }
 
+    fmt.Println(restaurantID)
     fmt.Println(instagramHandle)
 
-    return events.APIGatewayProxyResponse{Body: instagramHandle, StatusCode: 200}, nil
+    body := fmt.Sprintf("{\"handle\":\"%s\"}", instagramHandle)
+    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}, nil
 }
