@@ -10,7 +10,7 @@ import (
 
 func idNotFoundErrorResponse(id string) events.APIGatewayProxyResponse {
     body:= fmt.Sprintf("{\"error\":\"Instagram details are not found for %v\"}", id)
-    return events.APIGatewayProxyResponse{Body: body, StatusCode: 404}
+    return events.APIGatewayProxyResponse{Headers: responseHeaders, Body: body, StatusCode: 404}
 }
 
 func invalidRequestErrorResponse() events.APIGatewayProxyResponse {
