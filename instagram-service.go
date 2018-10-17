@@ -32,24 +32,24 @@ func main() {
     lambda.Start(HandleRequest)
 }
 
-func HandleRequest(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse {
+func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
     fmt.Println(request)
     restaurantID := request.QueryStringParameters["restaurantid"]
     fmt.Println(request.QueryStringParameters)
 
     if restaurantID == "" {
-        return invalidRequestErrorResponse()
+        return invalidRequestErrorResponse(), nil
     }
 
     instagramHandle := instagramHandlesById[restaurantID]
     if instagramHandle == "" {
-        return idNotFoundErrorResponse(restaurantID)
+        return idNotFoundErrorResponse(restaurantID), nil
     }
 
     fmt.Println(restaurantID)
     fmt.Println(instagramHandle)
 
     body := fmt.Sprintf("{\"handle\":\"%s\"}", instagramHandle)
-    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}
+    return events.APIGatewayProxyResponse{Body: body, StatusCode: 200}, nil
 }

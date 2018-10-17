@@ -10,7 +10,7 @@ func TestFound(t *testing.T) {
     expected := events.APIGatewayProxyResponse{Body: "{\"handle\":\"nandosuk\"}", StatusCode: 200}  
     var query = map[string]string{ "restaurantid": "14950", }
     req := events.APIGatewayProxyRequest{QueryStringParameters: query}
-    var actual = HandleRequest(req)
+    var actual, _ = HandleRequest(req)
     if actual.Body != expected.Body {
         t.Errorf("Error actual: '%v', and Expected: '%v'.", actual, expected)
     }
@@ -21,7 +21,7 @@ func TestNotFound(t *testing.T) {
     expected := idNotFoundErrorResponse("99999999999")
     var query = map[string]string{ "restaurantid": "99999999999", }
     req := events.APIGatewayProxyRequest{QueryStringParameters: query}
-    var actual = HandleRequest(req)
+    var actual, _ = HandleRequest(req)
     if actual.Body != expected.Body {
         t.Errorf("Error actual: '%v', and Expected: '%v'.", actual, expected)
     }
@@ -32,7 +32,7 @@ func TestInvalidRequest(t *testing.T) {
     expected := invalidRequestErrorResponse()
     var query = map[string]string{ "resantID": "14950", }
     req := events.APIGatewayProxyRequest{QueryStringParameters: query}
-    var actual = HandleRequest(req)
+    var actual, _ = HandleRequest(req)
     if actual.Body != expected.Body {
         t.Errorf("Error actual: '%v', and Expected: '%v'.", actual, expected)
     }
