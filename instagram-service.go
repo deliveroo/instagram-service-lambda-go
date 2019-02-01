@@ -50,6 +50,6 @@ func HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProx
         return idNotFoundErrorResponse(restaurantID), nil
     }
 
-    body := fmt.Sprintf("{\"url\":\"https://www.instagram.com/%s/\"}", instagramHandle)
+    body := fmt.Sprintf("{\"url\":\"https://www.instagram.com/%s/\",\"handle\":\"%s\"}", instagramHandle, instagramHandle)
     return events.APIGatewayProxyResponse{Headers: responseHeaders, Body: body, StatusCode: 200}, nil
 }
