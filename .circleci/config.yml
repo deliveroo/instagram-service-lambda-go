@@ -13,7 +13,7 @@ global_dockerhub_auth: &global_dockerhub_auth
 version: 2
 upload_roo_lambda: &upload_roo_lambda
   docker:
-    - image: deliveroo/circleci:0.4.2
+    - image: deliveroo/circleci:latest
       <<: *global_dockerhub_auth
   steps:
     - attach_workspace:
