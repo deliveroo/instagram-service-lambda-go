@@ -1,21 +1,29 @@
+# GLOBAL-ANCHORS - DockerHub Authentication changes applied - PROD-1431 / PROD-1435
+global_dockerhub_login: &global_dockerhub_login
+  run:
+    name: Authenticate with hub.docker.com - DockerHub
+    command: docker login -u $GLOBAL_DOCKERHUB_USERNAME -p $GLOBAL_DOCKERHUB_PASSWORD
+global_context: &global_context
+  context:
+    - org-global
+global_dockerhub_auth: &global_dockerhub_auth
+  auth:
+    username: $GLOBAL_DOCKERHUB_USERNAME
+    password: $GLOBAL_DOCKERHUB_PASSWORD
 version: 2
-
 upload_roo_lambda: &upload_roo_lambda
   docker:
-    - image: deliveroo/circleci:0.2.3
-
+    - image: deliveroo/circleci:latest
+      <<: *global_dockerhub_auth
   steps:
-
     - attach_workspace:
         at: /tmp/workspace
-
     - run:
-          name: Debug 3
-          command: ls /tmp/workspace
+        name: Debug 3
+        command: ls /tmp/workspace
     - run:
         name: Create deploy package
         command: zip -j /tmp/instagram-service-lambda-go.zip /tmp/workspace/instagram-service-lambda-go /tmp/workspace/data.json
-
     - run:
         name: Push new Lambda version
         command: |
@@ -24,21 +32,19 @@ upload_roo_lambda: &upload_roo_lambda
           SOURCE=/tmp/instagram-service-lambda-go.zip
           DESTINATION=${AWS_S3_PREFIX}/instagram-service-lambda-go/${CIRCLE_SHA1}.zip
           aws s3 cp $SOURCE $DESTINATION
-
 jobs:
   test:
     docker:
-    - image: circleci/golang:1.11
-      environment:
-        GO111MODULE: "on"
-
+      - image: circleci/golang:1.11
+        <<: *global_dockerhub_auth
+        environment:
+          GO111MODULE: "on"
     steps:
+      - *global_dockerhub_login
       - checkout
-
       - run:
           name: Ensure modules are available
           command: go mod download
-
       - run:
           name: Test the Lambda function
           command: env GOOS=linux GOARCH=amd64 go test -v ./...
@@ -54,7 +60,7 @@ jobs:
       - save_cache:
           key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-          - "/go/pkg/mod"
+            - "/go/pkg/mod"
       - run:
           name: Debug 2
           command: ls
@@ -63,27 +69,24 @@ jobs:
           paths:
             - instagram-service-lambda-go
             - data.json
-
   upload_sandbox:
     <<: *upload_roo_lambda
     environment:
       - TARGET: sandbox
-
   upload_staging:
     <<: *upload_roo_lambda
     environment:
       - TARGET: staging
-
   upload_production:
     <<: *upload_roo_lambda
     environment:
       - TARGET: production
-
 workflows:
   version: 2
   test_and_upload:
     jobs:
-      - test
+      - test:
+          <<: *global_context
       - upload_staging: &upload_roo_lambda
           requires:
             - test
@@ -91,7 +94,10 @@ workflows:
             branches:
               only:
                 - master
+          <<: *global_context
       - upload_production:
           <<: *upload_roo_lambda
+          <<: *global_context
       - upload_sandbox:
           <<: *upload_roo_lambda
+          <<: *global_context
